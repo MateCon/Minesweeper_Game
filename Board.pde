@@ -52,32 +52,15 @@ class Board {
   
   void clearNeighbours(int index) {
     cells[index].hasBeenDiscovered = true;
-    int[] neighbours = {
-      index-1,
-      index+1,
-      index-size[0],
-      index+size[0],
-      index-1-size[0],
-      index+1-size[0],
-      index-1+size[0],
-      index+1+size[0]
-    };
-    
-    boolean[] conditions = {
-      (this.cells[index].xPos > 0),
-      (this.cells[index].xPos < size[0]-1),
-      (this.cells[index].yPos > 0),
-      (this.cells[index].yPos < size[1]-1),
-      (this.cells[index].xPos > 0 && this.cells[index].yPos > 0),
-      (this.cells[index].xPos < size[0]-1 && this.cells[index].yPos > 0),
-      (this.cells[index].xPos > 0 && this.cells[index].yPos < size[1]-1),
-      (this.cells[index].xPos < size[0]-1 && this.cells[index].yPos < size[1]-1),
-    };
-    for(int iteration = 0; iteration < 8; iteration++) {
-      if(conditions[iteration] && !this.cells[neighbours[iteration]].hasBeenDiscovered) {
-        cells[neighbours[iteration]].handleClick();
-        if(cells[neighbours[iteration]].neighbours == 0) {
-          this.clearNeighbours(neighbours[iteration]);
+    int x = index%size[0], y = (index-index%size[1])/size[0], nIndex;
+    for(int nx = x-1; nx <= x+1; nx++) {
+      for(int ny = y-1; ny <= y+1; ny++) {
+        nIndex = nx + ny * this.size[0];
+        if(nx >= 0 && nx < this.size[0] && ny >= 0 && ny < this.size[1] && !this.cells[nx + ny*size[0]].hasBeenDiscovered) {
+          cells[nx + ny*size[0]].handleClick();
+          if(cells[nx + ny*size[0]].neighbours == 0) {
+            this.clearNeighbours(nx + ny*size[0]);
+          }
         }
       }
     }
