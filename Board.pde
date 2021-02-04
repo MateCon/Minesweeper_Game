@@ -34,25 +34,19 @@ class Board {
   }
   
   void findNeighbours() {
-    int counter;
-    for(int index = 0; index < totalCells; index++) {
-      counter = 0;
-      boolean[] conditions = {
-        (this.cells[index].xPos > 0 && this.cells[index-1].hasAMine),
-        (this.cells[index].xPos < size[0]-1 && this.cells[index+1].hasAMine),
-        (this.cells[index].yPos > 0 && this.cells[index-size[0]].hasAMine),
-        (this.cells[index].yPos < size[1]-1 && this.cells[index+size[0]].hasAMine),
-        (this.cells[index].xPos > 0 && this.cells[index].yPos > 0 && this.cells[index-1-size[0]].hasAMine),
-        (this.cells[index].xPos < size[0]-1 && this.cells[index].yPos > 0 && this.cells[index+1-size[0]].hasAMine),
-        (this.cells[index].xPos > 0 && this.cells[index].yPos < size[1]-1 && this.cells[index-1+size[0]].hasAMine),
-        (this.cells[index].xPos < size[0]-1 && this.cells[index].yPos < size[1]-1 && this.cells[index+1+size[0]].hasAMine),
-      };
-      
-      for(boolean condition : conditions) {
-        if(condition) counter++;
+    int counter, index, nIndex;
+    for(int x = 0; x < this.size[0]; x++) {
+      for(int y = 0; y < this.size[1]; y++) {
+        index = x + y * this.size[0];
+        counter = 0;
+        for(int nx = x-1; nx <= x+1; nx++) {
+          for(int ny = y-1; ny <= y+1; ny++) {
+            nIndex = nx + ny * this.size[0];
+            if(nx >= 0 && nx < this.size[0] && ny >= 0 && ny < this.size[1] && this.cells[nIndex].hasAMine) counter++;
+          }
+        }
+        this.cells[index].neighbours = counter;
       }
-      
-      this.cells[index].neighbours = counter;
     }
   }
   
